@@ -1,0 +1,41 @@
+name: Deploy on PR to main
+
+on:
+  pull_request:
+    branches: [main]
+    types: [closed]
+
+jobs:
+  deploy:
+    if: github.event.pull_request.merged == true  # Только если PR был мержен
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install SSH/SCP tools
+        run: sudo apt-get install -y sshpass 
+
+      - name: Deploy via SCP (with password)
+        env:
+          SERVER_USER: ${{ secrets.SSH_USER }}
+          SERVER_PASSWORD: ${{ secrets.SSH_PASSWORD }}
+          SERVER_IP: ${{ secrets.SSH_HOST }}
+          SERVER_DEPLOY_PATH: "/var/www/my-app"
+        run: |
+          sshpass -p "$SERVER_PASSWORD" scp -o StrictHostKeyChecking=no -r ./ "$SERVER_USER@$SERVER_IP:$SERVER_DEPLOY_PATH"
+
+          # Дополнительные команды после загрузки
+          sshpass -p "$SERVER_PASSWORD" ssh -o StrictHostKeyChecking=no "$SERVER_USER@$SERVER_IP" \
+            "composer install --no-dev --optimize-autoloader && \
+             cp .env.example .env && \
+             php artisan key:generate && \
+             php artisan config:cache && \
+             php artisan route:cache && \
+             php artisan view:cache && \
+             php artisan migrate --force && \
+             chmod -R 775 storage bootstrap/cache && \
+             chown -R www-data:www-data storage bootstrap/cache && \
+             php artisan queue:restart
+             "
