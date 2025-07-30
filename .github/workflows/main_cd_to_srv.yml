@@ -15,14 +15,14 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install SSH/SCP tools
-        run: sudo apt-get install -y sshpass 
+        run: sudo apt-get install -y sshpass
 
       - name: Deploy via SCP (with password)
         env:
           SERVER_USER: ${{ secrets.SSH_USER }}
           SERVER_PASSWORD: ${{ secrets.SSH_PASSWORD }}
           SERVER_IP: ${{ secrets.SSH_HOST }}
-          SERVER_DEPLOY_PATH: "/var/www/my-app"
+          SERVER_DEPLOY_PATH: "/var/www/thescript_ag_usr/data/www/gsheet.portfolio.thescript.agency/"
         run: |
           sshpass -p "$SERVER_PASSWORD" scp -o StrictHostKeyChecking=no -r ./ "$SERVER_USER@$SERVER_IP:$SERVER_DEPLOY_PATH"
 
