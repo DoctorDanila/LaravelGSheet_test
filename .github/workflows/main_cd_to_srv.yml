@@ -25,12 +25,3 @@ jobs:
           SERVER_DEPLOY_PATH: "/var/www/thescript_ag_usr/data/www/gsheet.portfolio.thescript.agency/"
         run: |
           sshpass -p "$SERVER_PASSWORD" scp -o StrictHostKeyChecking=no -r ./ "$SERVER_USER@$SERVER_IP:$SERVER_DEPLOY_PATH"
-
-          # Дополнительные команды после загрузки
-          sshpass -p "$SERVER_PASSWORD" ssh -o StrictHostKeyChecking=no "$SERVER_USER@$SERVER_IP" \
-            "composer install --no-dev --optimize-autoloader && \
-             php artisan migrate --force && \
-             chmod -R 775 storage bootstrap/cache && \
-             chown -R www-data:www-data storage bootstrap/cache && \
-             php artisan queue:restart
-             "
