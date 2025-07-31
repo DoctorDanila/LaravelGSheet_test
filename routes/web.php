@@ -18,3 +18,5 @@ Route::get('/', [RecordController::class, 'index']);
 Route::post('/generate', [RecordController::class, 'generate'])->name('generate');
 Route::post('/clear', [RecordController::class, 'clear'])->name('clear');
 Route::get('/fetch/{count?}', [RecordController::class, 'fetch']);
+Route::post('/sheet', [RecordController::class, 'updateSheet'])->name('sheet.update');
+Route::post('/comment/{record}', [RecordController::class, 'saveComment'])->name('comment.save');

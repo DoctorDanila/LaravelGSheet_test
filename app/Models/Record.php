@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 class Record extends Model
 {
-    protected $fillable = ['text', 'status'];
+    protected $fillable = ['text', 'status', 'comment'];
 
     protected $casts = [
         'status' => RecordStatus::class,

@@ -29,11 +29,6 @@ jobs:
           # Дополнительные команды после загрузки
           sshpass -p "$SERVER_PASSWORD" ssh -o StrictHostKeyChecking=no "$SERVER_USER@$SERVER_IP" \
             "composer install --no-dev --optimize-autoloader && \
-             cp .env.example .env && \
-             php artisan key:generate && \
-             php artisan config:cache && \
-             php artisan route:cache && \
-             php artisan view:cache && \
              php artisan migrate --force && \
              chmod -R 775 storage bootstrap/cache && \
              chown -R www-data:www-data storage bootstrap/cache && \
